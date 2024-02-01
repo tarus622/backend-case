@@ -1,12 +1,13 @@
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
-const { generateToken } = require('../helpers/auth');
+const { generateToken, authenticateUser } = require('../helpers/auth');
+const UnauthorizedError = require('../errors/unauthorized');
 
 async function authenticateToken(headers) {
     const token = headers['authorization'];
+    const secretKey = process.env.SECRET_KEY;
 
     if (!token) {
-        throw new Error('Unauthorized');
+        throw new UnauthorizedError('Unauthorized');
     }
 
     return new Promise((resolve, reject) => {
@@ -21,16 +22,21 @@ async function authenticateToken(headers) {
 }
 
 async function login(body) {
-    const { username, password } = body;
+    try {
+        const { email, password } = body;
 
-    return new Promise((resolve, reject) => {
-        if (username === 'example_user' && password === 'password123') {
-            const { token, secretKey } = generateToken(body);
-            resolve({ token, secretKey });
+        const user = await authenticateUser(email, password);
+
+        if (user) {
+            const token = await generateToken(body);
+            return token;
         } else {
-            reject(new Error('Invalid credentials'));
+            throw new UnauthorizedError('Invalid credentials');
         }
-    });
+    } catch (error) {
+        throw error;
+    }
 }
+
 
 module.exports = { generateToken, login, authenticateToken };
