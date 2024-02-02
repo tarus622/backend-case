@@ -11,18 +11,18 @@ dotenv.config({ path: '.env' })
 
 // MongoDB connection
 mongoose.connect(process.env.DB_CONNECTION_STRING)
-
-const db = mongoose.connection;
-
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', () => {
-  console.log('Connected to MongoDB');
-});
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((error) => {
+    console.error('MongoDB connection error:', error);
+  });
 
 // Routes
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
+var documentsRouter = require('./routes/documents');
 
 var app = express();
 
@@ -36,6 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
+app.use('/documents', documentsRouter);
 
 // catch 404 and forward to error handler
 // app.use(function (req, res, next) {

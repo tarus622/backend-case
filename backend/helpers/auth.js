@@ -4,9 +4,9 @@ const UnauthorizedError = require('../errors/unauthorized');
 const { compare } = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-async function generateToken(body) {
+async function generateToken(user) {
     const secretKey = process.env.SECRET_KEY;
-    return jwt.sign({ email: body.email }, secretKey, { expiresIn: '1h' });
+    return jwt.sign({ email: user.email, accessLevel: user.accessLevel }, secretKey, { expiresIn: '1h' });
 }
 
 async function authenticateUser(email, password) {

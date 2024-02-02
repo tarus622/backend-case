@@ -1,9 +1,9 @@
-const userSchema = require('../database/schemas/user.schema');
+const documentSchema = require('../database/schemas/document.schema');
 
-module.exports = function validationSignUp(req, res, next) {
+module.exports = function validationDocument(req, res, next) {
     try {
         req.body.accessLevel ? req.body.accessLevel : req.body.accessLevel = 1;
-        const { error, value } = userSchema.validate(req.body);
+        const { error, value } = documentSchema.validate(req.body);
 
         if (error) {
             return res.status(400).json({ error: error.details[0].message });

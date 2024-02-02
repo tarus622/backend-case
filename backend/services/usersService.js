@@ -6,12 +6,12 @@ const NotFoundError = require('../errors/not-found')
 const usersService = {
     createUser: async function (data) {
         try {
-            const { username, email, password } = data
+            const { username, email, password, accessLevel } = data
 
             const salt = genSaltSync(10);
             const passwordHashed = await hash(password, salt);
 
-            return User.create({ username, email, password: passwordHashed })
+            return User.create({ username, email, password: passwordHashed, accessLevel })
                 .then(result => result)
                 .catch(error => {
                     throw new BadRequestError(error.message)
