@@ -1,11 +1,9 @@
 const express = require('express');
-const validationSignUp = require('../middlewares/validationSignUp');
-const authMiddlewares = require('../middlewares/authMiddlewares');
-const authController = require('../controllers/authController');
+const authUserController = require('../controllers/authUserController');
 const errorHandler = require('../middlewares/errorHandler');
 const router = express.Router();
 
-router.get('/sign-in', authController.signIn);
+router.get('/sign-in', authUserController.signIn);
 
 router.use(errorHandler);
 

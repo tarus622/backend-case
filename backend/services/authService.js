@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { generateToken, authenticateUser } = require('../helpers/auth');
+const { generateToken, authenticateUser } = require('../helpers/authenticateUser');
 const UnauthorizedError = require('../errors/unauthorized');
 
 async function login(body) {

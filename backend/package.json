@@ -20,8 +20,10 @@
     "mongoose": "^8.1.1",
     "morgan": "~1.9.1",
     "multer": "^1.4.5-lts.1",
+    "natural": "^6.10.4",
     "pdfkit": "^0.14.0",
-    "textract": "^2.5.0"
+    "textract": "^2.5.0",
+    "word-extractor": "^1.0.4"
   },
   "devDependencies": {
     "nodemon": "^3.0.3"

@@ -1,29 +1,17 @@
 const textract = require('textract');
-const PDFDocument = require('pdfkit');
-const fs = require('fs');
+const createPDFFromText = require('./utils/createPDF');
 
-module.exports = async function analyzeDoc(document) {
+module.exports = async function pdfHandler(document) {
     try {
         const extractedText = await extractTextFromPDF(document.file);
 
-        await createPDFFromText(extractedText, `./output-documents/.pdf/${document.filename}.pdf`);
+        await createPDFFromText(extractedText, `../output-documents/${document.filename}.pdf`);
 
         return extractedText;
     } catch (error) {
-        console.error('Error analyzing document:', error);
         throw error;
     }
 };
-
-async function createPDFFromText(extractedText, outputPath) {
-    const pdfDoc = new PDFDocument();
-
-    pdfDoc.pipe(fs.createWriteStream(outputPath));
-
-    pdfDoc.text(extractedText);
-
-    pdfDoc.end();
-}
 
 function extractTextFromPDF(buffer) {
     return new Promise((resolve, reject) => {

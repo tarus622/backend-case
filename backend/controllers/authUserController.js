@@ -1,6 +1,6 @@
 const authService = require('../services/authService');
 
-const authController = {
+const authUserController = {
     signIn: async function (req, res, next) {
         try {
             const token = await authService.login(req.body);
@@ -11,4 +11,4 @@ const authController = {
     }
 }
 
-module.exports = authController;
+module.exports = authUserController;

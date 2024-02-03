@@ -14,6 +14,28 @@ const documentsController = {
         }
     },
 
+    getDocumentsByName: async function (req, res, next) {
+        try {
+            const token = req.headers.authorization;
+            const { filename } = req.query;
+            const documents = await documentsService.getDocumentsByFilename(token, filename);
+            res.send(documents);
+        } catch (error) {
+            next(new BadRequestError(error));
+        }
+    },
+
+    getDocumentsByDate: async function (req, res, next) {
+        try {
+            const token = req.headers.authorization;
+            const { date } = req.query;
+            const documents = await documentsService.getDocumentsByDate(token, date);
+            res.send(documents);
+        } catch (error) {
+            next(new BadRequestError(error));
+        }
+    },
+
     uploadDocument: async function (req, res, next) {
         try {
             const body = req.body;
