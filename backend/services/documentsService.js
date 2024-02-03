@@ -3,6 +3,7 @@ const Document = require('../database/models/document.model');
 const pdfHandler = require('../helpers/pdfHandler');
 const NotFoundError = require('../errors/not-found');
 const docxHandler = require('../helpers/docxHandler');
+const documentsFilter = require('../helpers/documentsFilter');
 
 const documentsService = {
     getDocuments: async function (userData) {
@@ -69,15 +70,17 @@ const documentsService = {
         }
     },
 
-    getDocumentsByTextContent: async function (userData, textContent) {
+    getDocumentsByKeyword: async function (userData, word) {
         try {
-            const documents = await Document.find({ filename: { $regex: new RegExp(filename, 'i') }, accessLevel: { $lte: userData.accessLevel } })
-            if (documents.length === 0) throw new NotFoundError('No documents with the name provided and your access level were found');
-            for (const doc of documents) {
-                if (doc.contentType.includes('pdf')) {
-                    await pdfHandler(doc);
-                } else if (doc.contentType.includes('doc')) {
-                    await docxHandler(doc);
+            const documents = await Document.find({ accessLevel: { $lte: userData.accessLevel } })
+            const documentsFiltered = await documentsFilter(documents, word);
+
+            if (documentsFiltered.length === 0) throw new NotFoundError('No documents with the word provided and your access level were found');
+            for (const doc of documentsFiltered) {
+                if (doc[0].contentType.includes('pdf')) {
+                    await pdfHandler(doc[0]);
+                } else if (doc[0].contentType.includes('doc')) {
+                    await docxHandler(doc[0]);
                 }
             }
 
@@ -109,7 +112,8 @@ const documentsService = {
             throw error;
         }
         finally {
-            const filePath = `../uploads/${file.filename}`;
+            const filename = file.filename;
+            const filePath = `${__dirname}/../../uploads/${filename}`;
             fs.unlinkSync(filePath);
         }
     }

@@ -34,13 +34,14 @@ const documentsController = {
         }
     },
 
-    getDocumentsByTextContent: async function (req, res, next) {
+    getDocumentsByKeyword: async function (req, res, next) {
         try {
             const userData = req.user;
-            const { textContent } = req.body;
-            const documents = await documentsService.getDocumentsByTextContent(userData, textContent);
+            const { keyword } = req.body;
+            const documents = await documentsService.getDocumentsByKeyword(userData, keyword);
             res.send(documents);
         } catch (error) {
+            console.log(error)
             next(new BadRequestError(error));
         }
     },

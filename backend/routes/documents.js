@@ -6,7 +6,7 @@ const resetOutputDocuments = require('../middlewares/resetOutputDocuments');
 const documentsController = require('../controllers/documentsController');
 const router = express.Router();
 
-const upload = multer({ dest: `../uploads` });
+const upload = multer({ dest: `${__dirname}/../../uploads` });
 
 router.use(authenticateToken);
 router.use(resetOutputDocuments);
@@ -14,6 +14,7 @@ router.use(resetOutputDocuments);
 router.get('/', documentsController.getDocuments)
 router.get('/filename', documentsController.getDocumentsByName)
 router.get('/date', documentsController.getDocumentsByDate)
+router.get('/word', documentsController.getDocumentsByKeyword)
 router.post('/', upload.single('file'), documentsController.uploadDocument)
 
 router.use(errorHandler);

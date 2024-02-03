@@ -3,11 +3,11 @@ const extractDocxObject = require('./utils/extractDocxObject');
 
 module.exports = async function docxHandler(document) {
     try {
-        const wordObject = await extractDocxObject(document);
+        const docxObject = await extractDocxObject(document);
         let finalText = '';
 
-        for (let key in wordObject) {
-            finalText += wordObject[key];
+        for (let key in docxObject) {
+            finalText += docxObject[key];
         }
 
         await createPDFFromText(finalText, `${__dirname}/../../output-documents/${document.filename}.pdf`);
