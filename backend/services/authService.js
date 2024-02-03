@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const { generateToken, authenticateUser } = require('../helpers/authenticateUser');
 const UnauthorizedError = require('../errors/unauthorized');
 

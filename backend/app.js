@@ -5,7 +5,6 @@ var logger = require('morgan');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-
 // Config environmental variables
 dotenv.config({ path: '.env' })
 

@@ -1,4 +1,4 @@
-const documentSchema = require('../database/schemas/document.schema');
+const documentSchema = require('../validators/document.schema');
 
 module.exports = function validationDocument(req, res, next) {
     try {

@@ -1,15 +1,13 @@
 const fs = require('fs');
 const Document = require('../database/models/document.model');
-const jwt = require('jsonwebtoken');
 const pdfHandler = require('../helpers/pdfHandler');
 const NotFoundError = require('../errors/not-found');
 const docxHandler = require('../helpers/docxHandler');
 
 const documentsService = {
-    getDocuments: async function (token) {
+    getDocuments: async function (userData) {
         try {
-            const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
-            const documents = await Document.find({ accessLevel: { $lte: decodedToken.accessLevel } })
+            const documents = await Document.find({ accessLevel: { $lte: userData.accessLevel } })
             if (documents.length === 0) throw new NotFoundError('No documents with your access level were found');
 
             for (const doc of documents) {
@@ -25,13 +23,16 @@ const documentsService = {
         }
     },
 
-    getDocumentsByFilename: async function (token, filename) {
+    getDocumentsByFilename: async function (userData, filename) {
         try {
-            const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
-            const documents = await Document.find({ filename: { $regex: new RegExp(filename, 'i') }, accessLevel: { $lte: decodedToken.accessLevel } })
+            const documents = await Document.find({ filename: { $regex: new RegExp(filename, 'i') }, accessLevel: { $lte: userData.accessLevel } })
             if (documents.length === 0) throw new NotFoundError('No documents with the name provided and your access level were found');
             for (const doc of documents) {
-                await pdfHandler(doc);
+                if (doc.contentType.includes('pdf')) {
+                    await pdfHandler(doc);
+                } else if (doc.contentType.includes('doc')) {
+                    await docxHandler(doc);
+                }
             }
 
             return "Success!";
@@ -40,14 +41,14 @@ const documentsService = {
         }
     },
 
-    getDocumentsByDate: async function (token, date) {
+    getDocumentsByDate: async function (userData, firstDate, secondDate) {
         try {
-            const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
-            const formatedDate = date.slice(0, 10) + 'T23:59:59.471+00:00';
+            const formatedFirstDate = firstDate.slice(0, 10) + 'T00:00:00.471+00:00';
+            const formatedSecondDate = secondDate.slice(0, 10) + 'T23:59:59.471+00:00';
 
             const documents = await Document.find({
-                createdAt: { $lt: formatedDate },
-                accessLevel: { $lte: decodedToken.accessLevel }
+                createdAt: { $gte: formatedFirstDate, $lte: formatedSecondDate },
+                accessLevel: { $lte: userData.accessLevel }
             });
 
             if (documents.length === 0) {
@@ -55,7 +56,29 @@ const documentsService = {
             }
 
             for (const doc of documents) {
-                await pdfHandler(doc);
+                if (doc.contentType.includes('pdf')) {
+                    await pdfHandler(doc);
+                } else if (doc.contentType.includes('doc')) {
+                    await docxHandler(doc);
+                }
+            }
+
+            return "Success!";
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    getDocumentsByTextContent: async function (userData, textContent) {
+        try {
+            const documents = await Document.find({ filename: { $regex: new RegExp(filename, 'i') }, accessLevel: { $lte: userData.accessLevel } })
+            if (documents.length === 0) throw new NotFoundError('No documents with the name provided and your access level were found');
+            for (const doc of documents) {
+                if (doc.contentType.includes('pdf')) {
+                    await pdfHandler(doc);
+                } else if (doc.contentType.includes('doc')) {
+                    await docxHandler(doc);
+                }
             }
 
             return "Success!";
@@ -81,11 +104,13 @@ const documentsService = {
 
             await document.save();
 
-            fs.unlinkSync(filePath);
-
             return document.toJSON();
         } catch (error) {
             throw error;
+        }
+        finally {
+            const filePath = `../uploads/${file.filename}`;
+            fs.unlinkSync(filePath);
         }
     }
 };
