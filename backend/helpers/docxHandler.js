@@ -1,4 +1,4 @@
-const createPDFFromText = require('./utils/createPDF');
+const createPDFFromText = require('./utils/createPDFFromText');
 const extractDocxObject = require('./utils/extractDocxObject');
 
 module.exports = async function docxHandler(document) {
