@@ -62,7 +62,7 @@ const documentsController = {
             const body = req.body;
             const file = req.file;
             const { id } = req.params;
-            const document = await documentsService.uploadDocument(file, body, id);
+            const document = await documentsService.updateDocumentById(file, body, id);
             res.send(document);
         } catch (error) {
             next(new BadRequestError(error));
@@ -75,7 +75,8 @@ const documentsController = {
             const document = await documentsService.deleteDocumentById(id);
             res.send(document);
         } catch (error) {
-
+            console.log(error)
+            throw error;
         }
     }
 }

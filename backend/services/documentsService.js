@@ -126,7 +126,7 @@ const documentsService = {
             const filePath = `../uploads/${filename}`;
             const fileBuffer = fs.readFileSync(filePath);
 
-            const updatedDocument = await Document.findOneAndUpdate({ id }, {
+            const updatedDocument = await Document.findOneAndUpdate({ _id: id }, {
                 file: fileBuffer,
                 filename: body.filename,
                 contentType: mimetype,
@@ -146,9 +146,9 @@ const documentsService = {
         }
     },
 
-    deleteDocument: async function (id) {
+    deleteDocumentById: async function (id) {
         try {
-            const deletedDocument = await Document.findOneAndDelete({ id });
+            const deletedDocument = await Document.findOneAndDelete({ _id: id });
             if (!deletedDocument) throw new NotFoundError('Document not found or not deleted')
 
             return deletedDocument.toJSON();
