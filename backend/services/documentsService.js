@@ -102,13 +102,14 @@ const documentsService = {
                 file: fileBuffer,
                 filename: body.filename,
                 contentType: mimetype,
-                accessLevel: accessLevel
+                accessLevel: accessLevel,
             });
 
             await document.save();
 
             return document.toJSON();
         } catch (error) {
+            console.log(error);
             throw error;
         }
         finally {

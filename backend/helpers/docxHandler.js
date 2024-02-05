@@ -18,5 +18,3 @@ module.exports = async function docxHandler(document) {
         throw error;
     }
 };
-
-
