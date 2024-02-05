@@ -28,8 +28,8 @@ const usersService = {
             if (result.length === 0) { throw new NotFoundError("Users not found") };
 
             const users = result.map(user => {
-                const { _id, username, email } = user;
-                return { _id, username, email };
+                const { _id, username, email, accessLevel } = user;
+                return { _id, username, email, accessLevel };
             })
 
             return users;
@@ -44,8 +44,8 @@ const usersService = {
 
             if (!user || user === null) { throw new NotFoundError("User not found") };
 
-            const { _id, username } = user;
-            return { _id, username, email };
+            const { _id, username, accessLevel } = user;
+            return { _id, username, email, accessLevel };
         } catch (error) {
             throw error;
         }
