@@ -16,6 +16,8 @@ router.get('/filename', documentsController.getDocumentsByName)
 router.get('/date', documentsController.getDocumentsByDate)
 router.get('/word', documentsController.getDocumentsByKeyword)
 router.post('/', upload.single('file'), documentsController.uploadDocument)
+router.put('/:id', upload.single('file'), documentsController.updateDocument)
+router.delete('/:id', documentsController.deleteDocument)
 
 router.use(errorHandler);
 

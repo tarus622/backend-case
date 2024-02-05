@@ -55,6 +55,28 @@ const documentsController = {
         } catch (error) {
             next(new BadRequestError(error));
         }
+    },
+
+    updateDocument: async function (req, res, next) {
+        try {
+            const body = req.body;
+            const file = req.file;
+            const { id } = req.params;
+            const document = await documentsService.uploadDocument(file, body, id);
+            res.send(document);
+        } catch (error) {
+            next(new BadRequestError(error));
+        }
+    },
+
+    deleteDocument: async function (req, res, next) {
+        try {
+            const { id } = req.params;
+            const document = await documentsService.deleteDocumentById(id);
+            res.send(document);
+        } catch (error) {
+
+        }
     }
 }
 

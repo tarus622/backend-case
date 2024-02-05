@@ -109,7 +109,6 @@ const documentsService = {
 
             return document.toJSON();
         } catch (error) {
-            console.log(error);
             throw error;
         }
         finally {
@@ -117,7 +116,47 @@ const documentsService = {
             const filePath = `${__dirname}/../../uploads/${filename}`;
             fs.unlinkSync(filePath);
         }
+    },
+
+    updateDocumentById: async function (file, body, id) {
+        try {
+            const { filename, mimetype } = file;
+            const { accessLevel } = body;
+
+            const filePath = `../uploads/${filename}`;
+            const fileBuffer = fs.readFileSync(filePath);
+
+            const updatedDocument = await Document.findOneAndUpdate({ id }, {
+                file: fileBuffer,
+                filename: body.filename,
+                contentType: mimetype,
+                accessLevel: accessLevel,
+            })
+
+            if (!updatedDocument) throw new NotFoundError('Document not found or not updated')
+
+            return updatedDocument.toJSON();
+        } catch (error) {
+            throw error;
+        }
+        finally {
+            const filename = file.filename;
+            const filePath = `${__dirname}/../../uploads/${filename}`;
+            fs.unlinkSync(filePath);
+        }
+    },
+
+    deleteDocument: async function (id) {
+        try {
+            const deletedDocument = await Document.findOneAndDelete({ id });
+            if (!deletedDocument) throw new NotFoundError('Document not found or not deleted')
+
+            return deletedDocument.toJSON();
+        } catch (error) {
+            throw error;
+        }
     }
+
 };
 
 module.exports = documentsService;
