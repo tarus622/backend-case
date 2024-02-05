@@ -54,6 +54,7 @@ const usersService = {
     editPassword: async function (data) {
         try {
             const { email, password } = data;
+            if (password.length < 7) throw new BadRequestError('Password length must be at least 7 characters')
 
             const salt = genSaltSync(10);
             const passwordHashed = await hash(password, salt);
