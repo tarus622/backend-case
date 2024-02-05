@@ -18,7 +18,7 @@ const documentsService = {
                     await docxHandler(doc);
                 }
             }
-            return "Success!";
+            return documents;
         } catch (error) {
             throw error;
         }
@@ -36,7 +36,7 @@ const documentsService = {
                 }
             }
 
-            return "Success!";
+            return documents;
         } catch (error) {
             throw error;
         }
@@ -64,7 +64,7 @@ const documentsService = {
                 }
             }
 
-            return "Success!";
+            return documents;
         } catch (error) {
             throw error;
         }
@@ -84,7 +84,7 @@ const documentsService = {
                 }
             }
 
-            return "Success!";
+            return documents;
         } catch (error) {
             throw error;
         }
@@ -107,7 +107,7 @@ const documentsService = {
 
             await document.save();
 
-            return document.toJSON();
+            return document;
         } catch (error) {
             throw error;
         }
@@ -135,7 +135,7 @@ const documentsService = {
 
             if (!updatedDocument) throw new NotFoundError('Document not found or not updated')
 
-            return updatedDocument.toJSON();
+            return document;
         } catch (error) {
             throw error;
         }
@@ -151,7 +151,7 @@ const documentsService = {
             const deletedDocument = await Document.findOneAndDelete({ _id: id });
             if (!deletedDocument) throw new NotFoundError('Document not found or not deleted')
 
-            return deletedDocument.toJSON();
+            return document;
         } catch (error) {
             throw error;
         }

@@ -1,9 +1,9 @@
-const documentSchema = require('../validators/document.schema');
+const createDocumentSchemaValidator = require('../validators/create-document.schema');
 
-module.exports = function validationDocument(req, res, next) {
+module.exports = function validateCreateDocument(req, res, next) {
     try {
         req.body.accessLevel ? req.body.accessLevel : req.body.accessLevel = 1;
-        const { error, value } = documentSchema.validate(req.body);
+        const { error, value } = createDocumentSchemaValidator.validate(req.body);
 
         if (error) {
             return res.status(400).json({ error: error.details[0].message });
